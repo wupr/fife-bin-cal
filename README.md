@@ -48,10 +48,10 @@ resulted in the following output on 2025-02-08:
 ```text
 Submitted postcode 'KY16 9AJ'.
 Selected address 'College Gate, North Street, St Andrews, Fife, KY16 9AJ'.
-18/02/2025      Landfill / Blue Bin
-04/03/2025      Landfill / Blue Bin
-18/03/2025      Landfill / Blue Bin
-01/04/2025      Landfill / Blue Bin
+2025-02-18      Landfill / Blue Bin
+2025-03-04      Landfill / Blue Bin
+2025-03-18      Landfill / Blue Bin
+2025-04-01      Landfill / Blue Bin
 ```
 
 With a good Internet connection, this should take less than 10 seconds to run.

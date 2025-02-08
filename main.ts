@@ -57,11 +57,8 @@ while (Date.now() - start < 5_000) {
 const rows = await table.locator(":scope > div:not(:first-child)").all();
 for (const row of rows) {
   const dateText = await row.locator("div:nth-child(2)").innerText();
-  const collectionDate = new Date(dateText).toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  });
+  const collectionDate =
+    new Date(dateText + " UTC").toISOString().split("T")[0];
   const binType = await row.locator("div:nth-child(3)").innerText();
   console.log(`${collectionDate}\t${binType}`);
 }
