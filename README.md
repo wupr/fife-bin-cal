@@ -33,7 +33,7 @@ Clone this repository and run
 deno run --allow-all main.ts <postcode> <number>
 ```
 
-Remove the `--allow-all` option if you want to grant permissions (_e.g._ read, write, env) manually.
+If you want to grant permissions (_e.g._ read, write, env) manually, remove the `--allow-all` option or replace it all or some of the following options: `--allow-env`, `--allow-sys=homedir,osRelease,uid`, `--allow-read`, `--allow-write`, `--allow-run`.
 
 The script `main.ts` takes two positional arguments.
 Both arguments are case-insensitive.
@@ -57,6 +57,16 @@ Selected address 'College Gate, North Street, St Andrews, Fife, KY16 9AJ'.
 With a good Internet connection, this should take less than 10 seconds to run.
 
 The first two lines are printed to stderr. The rest is printed to stdout, with a tab separating the date and the bin type in each line.
+
+### Compiling
+
+The script can also be compiled using Deno, creating an executable binary.
+
+```sh
+deno compile --allow-env --allow-sys=homedir,osRelease,uid --allow-read --allow-write --allow-run main.ts
+```
+
+Cross-compiling is also supported, see [Deno's documentation](https://docs.deno.com/runtime/reference/cli/compile/#cross-compilation).
 
 ## License
 
