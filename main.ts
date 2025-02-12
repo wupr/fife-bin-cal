@@ -1,13 +1,15 @@
 import { chromium } from "playwright";
+import { createBrowserResource, createPageResource } from "./impl-dispose.ts";
 
 const postcode: string = Deno.args[0];
 const number: string = Deno.args[1];
 
 // Initialize browser and page
-const browser = await chromium.launch({
+await using browserResource = await createBrowserResource(chromium, {
   channel: "chromium",
 });
-const page = await browser.newPage();
+await using pageResource = await createPageResource(browserResource.browser);
+const page = pageResource.page;
 
 // Visit Fife Council's bin calendar look-up form
 await page.goto("https://www.fife.gov.uk/services/forms/bin-calendar");
@@ -35,8 +37,6 @@ if (optionValue) {
   console.error(`Selected address '${await option?.innerText()}'.`);
 } else {
   console.error("Failed to select address.");
-  page.close();
-  browser.close();
   Deno.exit(1);
 }
 
@@ -62,7 +62,3 @@ for (const row of rows) {
   const binType = await row.locator("div:nth-child(3)").innerText();
   console.log(`${collectionDate}\t${binType}`);
 }
-
-// Close page and browser
-page.close();
-browser.close();
