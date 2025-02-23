@@ -15,12 +15,14 @@ if (!authToken) {
   Deno.exit(1);
 }
 
+// Fetch address list
 const addressList = await getAddressData(postcode, authToken);
 if (!addressList) {
   console.error(`Failed to get address list for postcode '${postcode}'.`);
   Deno.exit(1);
 }
 
+// Select address
 const addressRegExp = new RegExp(`^${number},`, "i");
 const selectedAddress = addressList.find((a) => addressRegExp.test(a.label));
 if (!selectedAddress) {
@@ -33,6 +35,7 @@ console.error(
   `Fetching collection dates for address '${selectedAddress.label}'.`,
 );
 
+// Fetch address UPRN
 const addressUPRN = await getAddressUPRN(
   selectedAddress.value,
   authToken,
@@ -42,11 +45,14 @@ if (!addressUPRN) {
   Deno.exit(1);
 }
 
+// Fetch bin calendar
 const binCalendar = await getBinCalendar(addressUPRN, authToken);
 if (binCalendar === null) {
   console.error("Failed to get bin calendar.");
   Deno.exit(1);
 }
+
+// Print collection dates
 for (const collection of binCalendar) {
   const collectionDate =
     new Date(collection.date + " UTC").toISOString().split("T")[0];
