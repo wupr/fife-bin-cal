@@ -1,64 +1,55 @@
-import { chromium } from "playwright";
-import { createBrowserResource, createPageResource } from "./impl-dispose.ts";
+import {
+  getAddressData,
+  getAddressUPRN,
+  getAuthToken,
+  getBinCalendar,
+} from "./api-requests.ts";
 
-const postcode: string = Deno.args[0];
+const postcode: string = Deno.args[0].toUpperCase();
 const number: string = Deno.args[1];
 
-// Initialize browser and page
-await using browserResource = await createBrowserResource(chromium, {
-  channel: "chromium",
-});
-await using pageResource = await createPageResource(browserResource.browser);
-const page = pageResource.page;
-
-// Visit Fife Council's bin calendar look-up form
-await page.goto("https://www.fife.gov.uk/services/forms/bin-calendar");
-
-// Reject cookies
-await page.locator("#fc-reject-settings").click();
-
-// Fill in the postcode and click the search button
-const postcodeUpper = postcode.toUpperCase();
-await page.getByLabel("postcode").fill(postcodeUpper);
-await page.getByRole("button", { name: /search/i }).click();
-console.error(`Submitted postcode '${postcodeUpper}'.`);
-
-// Wait for the `select` to appear
-const select = page.locator("#dform_widget_ps_3SHSN93_id");
-await select.waitFor({ state: "visible" });
-
-// Choose the option that starts with the number
-const option = select.locator("option").filter({
-  hasText: new RegExp(`^${number},`, "i"),
-});
-const optionValue = await option?.getAttribute("value");
-if (optionValue) {
-  await select.selectOption(optionValue);
-  console.error(`Selected address '${await option?.innerText()}'.`);
-} else {
-  console.error("Failed to select address.");
+// Fetch authorization token
+const authToken = await getAuthToken();
+if (!authToken) {
+  console.error("Failed to get authorization token.");
   Deno.exit(1);
 }
 
-// Wait for the table of collection dates to appear
-const table = page.locator("#dform_table_tab_collections");
-await table.waitFor({ state: "visible" });
-
-// Wait for the table to be populated
-const start = Date.now();
-while (Date.now() - start < 5_000) {
-  if (await table.locator(":scope > div").count() > 1) {
-    break;
-  }
-  await new Promise((resolve) => setTimeout(resolve, 100));
+const addressList = await getAddressData(postcode, authToken);
+if (!addressList) {
+  console.error(`Failed to get address list for postcode '${postcode}'.`);
+  Deno.exit(1);
 }
 
-// Go through each data row in the table and print the information
-const rows = await table.locator(":scope > div:not(:first-child)").all();
-for (const row of rows) {
-  const dateText = await row.locator("div:nth-child(2)").innerText();
+const addressRegExp = new RegExp(`^${number},`, "i");
+const selectedAddress = addressList.find((a) => addressRegExp.test(a.label));
+if (!selectedAddress) {
+  console.error(
+    `Failed to find address starting '${number}' for postcode '${postcode}'.`,
+  );
+  Deno.exit(1);
+}
+console.error(
+  `Fetching collection dates for address '${selectedAddress.label}'.`,
+);
+
+const addressUPRN = await getAddressUPRN(
+  selectedAddress.value,
+  authToken,
+);
+if (!addressUPRN) {
+  console.error("Failed to get address profile.");
+  Deno.exit(1);
+}
+
+const binCalendar = await getBinCalendar(addressUPRN, authToken);
+if (binCalendar === null) {
+  console.error("Failed to get bin calendar.");
+  Deno.exit(1);
+}
+for (const collection of binCalendar) {
   const collectionDate =
-    new Date(dateText + " UTC").toISOString().split("T")[0];
-  const binType = await row.locator("div:nth-child(3)").innerText();
+    new Date(collection.date + " UTC").toISOString().split("T")[0];
+  const binType = collection.type;
   console.log(`${collectionDate}\t${binType}`);
 }

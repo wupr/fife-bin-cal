@@ -1,5 +1,4 @@
 {
   "imports": {
-    "playwright": "npm:playwright@^1.50.1"
   }
 }
