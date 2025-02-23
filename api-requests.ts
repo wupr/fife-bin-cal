@@ -20,7 +20,6 @@ export async function getAuthToken(): Promise<string | null> {
   if (!response.ok) {
     return null;
   }
-  console.error(response.ok);
   return response.headers.get("Authorization");
 }
 
