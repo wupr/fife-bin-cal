@@ -10,7 +10,8 @@ The URL of the webpage is never updated, so bookmarking does not help.
 
 The code in this repository automates the process by making direct API requests.
 
-An alternative version using [Playwright](https://playwright.dev/) is available on the "v1" branch.
+This is version 2 of the tool, adapted from a Python-based [fork](https://github.com/DE0CH/fife-bin-cal/tree/6dedcca7debdd0ce7a4343aea0bd77369ca91465) of the original version.
+The original version uses [Playwright](https://playwright.dev/) and is available on the "v1" branch.
 
 ## Usage
 
