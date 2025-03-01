@@ -5,8 +5,13 @@ import {
   getBinCalendar,
 } from "./api-requests.ts";
 
-const postcode: string = Deno.args[0].toUpperCase();
-const number: string = Deno.args[1];
+if (Deno.args.length < 2) {
+  console.error("Two arguments required: <postcode> <number>.");
+  Deno.exit(1);
+}
+
+const postcode: string = Deno.args[0]?.toUpperCase()!;
+const number: string = Deno.args[1]!;
 
 // Fetch authorization token
 const authToken = await getAuthToken();
@@ -36,10 +41,7 @@ console.error(
 );
 
 // Fetch address UPRN
-const addressUPRN = await getAddressUPRN(
-  selectedAddress.value,
-  authToken,
-);
+const addressUPRN = await getAddressUPRN(selectedAddress.value, authToken);
 if (!addressUPRN) {
   console.error("Failed to get address profile.");
   Deno.exit(1);
