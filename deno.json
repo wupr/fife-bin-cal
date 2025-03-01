@@ -1,4 +1,7 @@
 {
+  "tasks": {
+    "dev": "deno serve --watch -R serve.ts calendar.tsv"
+  },
   "imports": {
   },
   "compilerOptions": {
