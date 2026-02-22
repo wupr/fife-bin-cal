@@ -8,7 +8,8 @@ interface BinCalendarEntry {
   type: string;
 }
 
-const FIFE_COUNCIL_API_BASE_URL = "https://www.fife.gov.uk/api/";
+const FIFE_COUNCIL_API_BASE_URL =
+  "https://fife.form.uk.empro.verintcloudservices.com/api/";
 
 export async function getAuthToken(): Promise<string | null> {
   const qeuryParams = new URLSearchParams({

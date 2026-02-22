@@ -4,7 +4,7 @@ A tool that looks up the Fife Council's bin collection dates.
 
 ## Motivation
 
-The author found the Fife Council's bin calendar [search tool](https://www.fife.gov.uk/services/forms/bin-calendar) annoying to use.
+The author found the Fife Council's bin calendar [search tool](https://fife.portal.uk.empro.verintcloudservices.com/site/fife/request/bin_calendar) annoying to use.
 Usually, one needs to visit the webpage in a browser, enter the postcode, click search, select the address from a list, and wait for the table of collection dates to load.
 The URL of the webpage is never updated, so bookmarking does not help.
 
