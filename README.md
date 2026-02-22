@@ -30,8 +30,8 @@ deno run --allow-net main.ts <postcode> <number>
 
 The script `main.ts` takes two positional arguments.
 Both arguments are case-insensitive.
-The second argument `<number>` is the part of the address before the first comma, as displayed when using the look-up webpage.
-Usually it is the house number.
+The second argument `<number>` is the word(s) at the start of the address (as displayed when using the look-up webpage) that distinguish(es) it from other addresses.
+Usually the house number is sufficient (if it appears at the very start of the address).
 
 For example, running
 ```sh

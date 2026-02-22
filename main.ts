@@ -28,7 +28,7 @@ if (!addressList) {
 }
 
 // Select address
-const addressRegExp = new RegExp(`^${number},`, "i");
+const addressRegExp = new RegExp(`^${number}\\b`, "i");
 const selectedAddress = addressList.find((a) => addressRegExp.test(a.label));
 if (!selectedAddress) {
   console.error(
